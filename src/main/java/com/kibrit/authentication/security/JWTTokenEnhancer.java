@@ -16,18 +16,14 @@ public class JWTTokenEnhancer implements TokenEnhancer {
     @Autowired
     private UserRepository userRepository;
 
-    private Integer getUserId(String userName){
-        User user = userRepository.findByUsername(userName);
-        return user.getId();
-    }
-
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         Map<String, Object> additionalInfo = new HashMap<>();
-        Integer userID =  getUserId(authentication.getName());
-
-        additionalInfo.put("userID", userID);
-
+        User user = userRepository.findByUsername(authentication.getName());
+        additionalInfo.put("userId", user.getId());
+        additionalInfo.put("firstName", user.getFirstName());
+        additionalInfo.put("lastName",user.getLastName());
+        additionalInfo.put("username", user.getUsername());
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
