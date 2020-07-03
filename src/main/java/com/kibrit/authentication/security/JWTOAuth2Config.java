@@ -69,6 +69,7 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .withClient(clientId)
                 .secret(clientSecret)
                 .authorizedGrantTypes("refresh_token", "password", "client_credentials")
-                .scopes("webclient", "mobileclient");
+                .scopes("webclient", "mobileclient")
+                .accessTokenValiditySeconds(172800);
     }
 }
