@@ -1,0 +1,18 @@
+before_script:
+  - yum install -y which
+  - 'which ssh-agent || ( yum install openssh-clients -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan 192.168.170.2 >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#  - ssh -t -t root@192.168.170.2 /bin/bash testtesttest
+build:
+  stage: build 
+  script:
+    - mvn clean install
+    - mv target/*.jar target/authentication.jar
+    - ssh root@192.168.170.2 "systemctl stop authentication.service"
+    - scp -r target/*.jar root@192.168.170.2:/usr/faq/ && ssh root@192.168.170.2 "systemctl start authentication.service"
