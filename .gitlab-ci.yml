@@ -16,3 +16,5 @@ build:
     - mv target/*.jar target/authentication.jar
     - ssh root@192.168.170.2 "systemctl stop authentication.service"
     - scp -r target/*.jar root@192.168.170.2:/usr/authentication/ && ssh root@192.168.170.2 "systemctl start authentication.service"
+  only:
+    - master
