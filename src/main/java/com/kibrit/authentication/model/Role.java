@@ -2,6 +2,7 @@ package com.kibrit.authentication.model;
 
 
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +11,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "roles")
-@Getter
-@Setter
+@Data
 public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 

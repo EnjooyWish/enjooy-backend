@@ -1,6 +1,7 @@
 package com.kibrit.authentication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +13,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-public class User implements Serializable {
+@Data
+public class User  implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -28,7 +28,6 @@ public class User implements Serializable {
 
     private String middleName;
 
-    @JsonIgnore
     private String password;
 
     private String username;
