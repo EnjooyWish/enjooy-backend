@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -23,13 +20,34 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                                   HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("status", status.value());
+        body.put("message", ex.getLocalizedMessage());
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult()
                 .getFieldErrors()
                 .forEach(fieldError -> errors.put(fieldError.getField(),fieldError.getDefaultMessage()));
-        body.put("errors", errors);
+        ex.getBindingResult()
+                .getGlobalErrors()
+                .forEach(error -> errors.put(error.getObjectName(), error.getDefaultMessage()));
+        body.put("error", errors);
+        body.put("response", null);
         return new ResponseEntity<>(body, headers, status);
+//        final List<String> errors = new ArrayList<>();
+//        ex.getBindingResult()
+//                .getFieldErrors()
+//                .forEach(fieldError -> errors.add(fieldError.getField() + ": " + fieldError.getDefaultMessage()));
+//
+
+//        final GenericResponse body = new GenericResponse(ex.getLocalizedMessage(), errors);
+//        final GenericResponse body = new GenericResponse(ex.getBindingResult().getAllErrors(), "InvalidMethodArgument-" + ex.getBindingResult().getObjectName());
+//        return new ResponseEntity<>(body, headers, status);
+    }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<Object> handleInternal(
+            final RuntimeException ex, final WebRequest request) {
+        logger.error("500 Status Code", ex);
+        final GenericResponse bodyOfResponse = new GenericResponse("Internal Server Error", "InternalError");
+        return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({InvalidOldPasswordException.class})
