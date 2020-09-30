@@ -17,7 +17,7 @@ import java.util.Map;
 @SpringBootApplication
 @EnableAuthorizationServer
 //@EnableDiscoveryClient
-//@EnableResourceServer
+@EnableResourceServer
 @EnableJpaRepositories
 //@RestController
 public class AuthenticationApplication {
