@@ -9,16 +9,26 @@ import com.kibrit.authentication.service.UserService;
 import com.kibrit.authentication.util.GenericResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    TokenStore tokenStore;
+
+    @Autowired
+    DefaultTokenServices defaultTokenServices;
 
     @ApiOperation(value = "Create new user")
     @PostMapping
@@ -50,6 +60,11 @@ public class UserController {
     public void deleteUser(@PathVariable Long id)
     {
         userService.deleteUser(id);
+    }
+
+    @GetMapping("/text")
+    public String sayHello(){
+        return "Yo get data from authentication service";
     }
 
 

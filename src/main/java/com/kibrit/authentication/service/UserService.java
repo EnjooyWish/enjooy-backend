@@ -8,17 +8,29 @@ import com.kibrit.authentication.exception.InvalidOldPasswordException;
 import com.kibrit.authentication.mapper.UserMapper;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
+import com.kibrit.authentication.security.JWTTokenStoreConfig;
 import com.kibrit.authentication.util.GenericResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Value("${security.jwt.client-id}")
+    private String clientId;
+
+    @Autowired
+    TokenStore tokenStore;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -72,11 +84,33 @@ public class UserService {
         userRepository.deleteById(id);
     }
     public boolean userExists(String username){
-        User user = userRepository.findByUsername(username);
+        User user = null;
+        if(username != null) {
+            user = userRepository.findByUsername(username);
+        }
         if( user != null){
             return true;
         }
         return false;
+    }
+
+    public void revokeAuthentication(User user) {
+        Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId(clientId);
+        for (OAuth2AccessToken token : tokens) {
+            revokeToken(token.getValue());
+        }
+    }
+
+    private boolean revokeToken(String tokenValue) {
+        OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
+        if (accessToken == null) {
+            return false;
+        }
+        if (accessToken.getRefreshToken() != null) {
+            tokenStore.removeRefreshToken(accessToken.getRefreshToken());
+        }
+        tokenStore.removeAccessToken(accessToken);
+        return true;
     }
 
 }
