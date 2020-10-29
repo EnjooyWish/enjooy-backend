@@ -3,20 +3,28 @@ package com.kibrit.authentication.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerEndpointsConfiguration;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+@Import(AuthorizationServerEndpointsConfiguration.class)
 @Configuration
 public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
@@ -33,33 +41,33 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Qualifier("appUserDetailsService")
     private UserDetailsService userDetailsService;
 
-
     @Autowired
-    private TokenStore tokenStore;
-
-    @Autowired
-    private DefaultTokenServices tokenServices;
-
-    @Autowired
-    private JwtAccessTokenConverter jwtAccessTokenConverter;
-
-    @Autowired
-    private TokenEnhancer jwtTokenEnhancer;
-
+    KeyPair keyPair;
 
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(jwtTokenEnhancer, jwtAccessTokenConverter));
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
 
-        endpoints.tokenStore(tokenStore)                             //JWT
-                .accessTokenConverter(jwtAccessTokenConverter)       //JWT
+        endpoints.tokenStore(tokenStore())                             //JWT
+                .accessTokenConverter(accessTokenConverter())       //JWT
                 .tokenEnhancer(tokenEnhancerChain)                   //JWT
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService);
     }
 
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
+    }
+
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setKeyPair(this.keyPair);
+        return converter;
+    }
 
 
     @Override
@@ -73,4 +81,18 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(1800)
                 .refreshTokenValiditySeconds(604800);
     }
+
+    @Bean
+    public KeyPair keyPairBean() throws NoSuchAlgorithmException {
+        KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
+        gen.initialize(2048);
+        KeyPair keyPair = gen.generateKeyPair();
+        return keyPair;
+    }
+
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
+        return new JWTTokenEnhancer();
+    }
+
 }

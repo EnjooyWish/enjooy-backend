@@ -24,16 +24,16 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    TokenStore tokenStore;
-
-    @Autowired
-    DefaultTokenServices defaultTokenServices;
-
     @ApiOperation(value = "Create new user")
     @PostMapping
     public User  save(@Valid @RequestBody UserDTO userDTO){
          return userService.save(userDTO);
+    }
+
+
+    @GetMapping("sdff")
+    public String  sdff(){
+        return "userService.save(userDTO)";
     }
 
     @ApiOperation(value = "Update existing user")
