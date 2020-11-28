@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 public class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
     @Override
-    public void initialize(ValidPassword constraintAnnotation) {
-
+    public void initialize(ValidPassword arg0) {
     }
 
     @Override
@@ -30,6 +29,9 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
                 // at least one digit character
                 new CharacterRule(EnglishCharacterData.Digit, 1),
 
+                // at least one special character
+                new CharacterRule(EnglishCharacterData.Special, 1),
+
                 // no whitespace
                 new WhitespaceRule()
 
@@ -39,7 +41,6 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
             return true;
         }
         List<String> messages = validator.getMessages(result);
-
         String messageTemplate = messages.stream()
                 .collect(Collectors.joining(","));
         constraintValidatorContext.buildConstraintViolationWithTemplate(messageTemplate)

@@ -10,9 +10,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface UsernameExists {
 
-    String message() default "Username already exist";
+    String message() default "Username already exists";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }

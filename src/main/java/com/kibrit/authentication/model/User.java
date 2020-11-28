@@ -1,16 +1,11 @@
 package com.kibrit.authentication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.kibrit.authentication.validation.PasswordMatch;
-import com.kibrit.authentication.validation.UsernameExists;
-import com.kibrit.authentication.validation.ValidEmail;
-import com.kibrit.authentication.validation.ValidPassword;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,13 +15,12 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "users")
 @Data
 @ApiModel("AcceptedMessage")
-public class User  extends Audit<String> implements Serializable {
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @ApiModelProperty(notes = "Auto generated user id", example = "1")
-    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @ApiModelProperty(notes = "Username must be unique", example = "samirs", required = true)
@@ -56,5 +50,9 @@ public class User  extends Audit<String> implements Serializable {
     @JoinTable(name = "users_and_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Role> roles;
+
+    @Basic(optional = false)
+    @Column(name = "is_active")
+    private boolean active = true;
 
 }

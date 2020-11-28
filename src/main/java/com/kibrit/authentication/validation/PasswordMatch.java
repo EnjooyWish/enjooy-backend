@@ -24,12 +24,5 @@ public @interface PasswordMatch
     String  password();
 
     String  confirmationPassword();
-//
-//    @Target({TYPE, ANNOTATION_TYPE})
-//    @Retention(RUNTIME)
-//    @Documented
-//    @interface List
-//    {
-//        FieldMatch[] value();
-//    }
+
 }

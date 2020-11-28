@@ -7,16 +7,10 @@ import org.springframework.stereotype.Service;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-//@Service
 public class UsernameValidator implements ConstraintValidator<UsernameExists, String> {
 
     @Autowired
     private UserService userService;
-
-    @Override
-    public void initialize(UsernameExists constraintAnnotation) {
-
-    }
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {

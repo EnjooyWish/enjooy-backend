@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -35,7 +36,7 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
     private String clientSecret;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private  AuthenticationManager authenticationManager;
 
     @Autowired
     @Qualifier("appUserDetailsService")
@@ -44,15 +45,13 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Autowired
     KeyPair keyPair;
 
-
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-
-        endpoints.tokenStore(tokenStore())                             //JWT
-                .accessTokenConverter(accessTokenConverter())       //JWT
-                .tokenEnhancer(tokenEnhancerChain)                   //JWT
+        endpoints.tokenStore(tokenStore())
+                .accessTokenConverter(accessTokenConverter())
+                .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService);
     }
@@ -72,7 +71,6 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-
         clients.inMemory()
                 .withClient(clientId)
                 .secret(clientSecret)
@@ -80,14 +78,6 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .scopes("webclient", "mobileclient")
                 .accessTokenValiditySeconds(1800)
                 .refreshTokenValiditySeconds(604800);
-    }
-
-    @Bean
-    public KeyPair keyPairBean() throws NoSuchAlgorithmException {
-        KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
-        gen.initialize(2048);
-        KeyPair keyPair = gen.generateKeyPair();
-        return keyPair;
     }
 
     @Bean

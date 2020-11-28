@@ -3,13 +3,15 @@ package com.kibrit.authentication.service;
 import com.kibrit.authentication.dto.AdminPasswordDTO;
 import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.dto.UserDTO;
-import com.kibrit.authentication.dto.UserUpdateDTO;
 import com.kibrit.authentication.exception.InvalidOldPasswordException;
-import com.kibrit.authentication.mapper.UserMapper;
+import com.kibrit.authentication.exception.ResourceNotFoundException;
+import com.kibrit.authentication.exception.UsernameAlreadyExistsException;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
 import com.kibrit.authentication.util.GenericResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,31 +19,55 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    @Value("${default.password}")
+    private String defaultPassword;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    final UserRepository userRepository;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     public User save(UserDTO userDTO){
-        User user = UserMapper.MAPPER.mapFromUserDTO(userDTO);
-        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        User user;
+        if(userDTO.getId() != null){
+            user = findById(userDTO.getId());
+        }else {
+            user = new User();
+            setDefaultPassword(user);
+        }
+        checkUserExistence(userDTO.getUsername(),userDTO.getId());
+        user.setUsername(userDTO.getUsername());
+        user.setPhoto(userDTO.getPhoto());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
         return userRepository.save(user);
     }
 
-    public User update(UserUpdateDTO userUpdateDTO){
-        User user = userRepository.findById(userUpdateDTO.getId()).get();
-        user.setFirstName(userUpdateDTO.getFirstName());
-        user.setLastName(userUpdateDTO.getLastName());
-        user.setMiddleName(userUpdateDTO.getMiddleName());
-        user.setEmail(userUpdateDTO.getEmail());
-        user.setPhoto(userUpdateDTO.getPhoto());
+    public void resetPassword(Long id){
+        User user = findById(id);
+        setDefaultPassword(user);
+        userRepository.save(user);
+    }
+
+    public void setDefaultPassword(User user){
+        user.setPassword(bCryptPasswordEncoder.encode(defaultPassword));
+    }
+
+    public User activateOrDeactivate(Long id, boolean isActive){
+        User user = findById(id);
+        user.setActive(isActive);
         return userRepository.save(user);
     }
 
     public User findById(Long id){
-        User user =  userRepository.findById(id).get();
-        return user;
+       return   userRepository.findById(id)
+                .orElseThrow(() ->
+                new ResourceNotFoundException("User not found with id = " + id));
     }
 
     public User  findByUsername(String username){
@@ -54,7 +80,7 @@ public class UserService {
 
     public GenericResponse changePasswordByUser(User user, UserPasswordDTO passwordDto){
         if (!isValidPassword(passwordDto.getOldPassword(),user.getPassword())) {
-            throw new InvalidOldPasswordException("Invalid old password");
+            throw new InvalidOldPasswordException("Old password is not valid");
         }else {
             user.setPassword(new BCryptPasswordEncoder().encode(passwordDto.getNewPassword()));
             userRepository.save(user);
@@ -71,15 +97,31 @@ public class UserService {
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
+
+    public void checkUserExistence(String username, Long id){
+        User user = findByUsername(username);
+        User existingUser = null;
+        if(id != null) {
+            existingUser = findById(id);
+        }
+        if((id == null && user != null) || (existingUser != null && user != null && user.getId() != existingUser.getId())){
+            throw new UsernameAlreadyExistsException("User with username " + username + " already exists");
+        }
+    }
     public boolean userExists(String username){
         User user = null;
         if(username != null) {
             user = userRepository.findByUsername(username);
         }
-        if( user != null){
-            return true;
-        }
-        return false;
+        return user != null;
     }
 
+    public Page<User> findAll(int page, int size){
+        return userRepository.findAllByOrderByActiveDescIdAsc(PageRequest.of(page,size));
+    }
+
+    public static void main(String[] args) {
+        String regex = "^((?![0-9.])[a-zA-Z0-9.]{5,30}+(?<![_.]))$";
+        System.out.println("qolf@".matches(regex));
+    }
 }
