@@ -24,15 +24,14 @@ public class AppUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
-
-        if(user == null) {
+        if(user != null && user.isActive()) {
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            user.getRoles().forEach(role ->
+                    authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        }else {
             throw new UsernameNotFoundException(String.format("The username %s doesn't exist", username));
         }
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role ->
-            authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
-
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 }
