@@ -8,8 +8,6 @@ import com.kibrit.authentication.util.GenericResponse;
 import io.swagger.annotations.ApiOperation;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
@@ -38,11 +36,11 @@ public class UserController {
 
     @ApiOperation(value = "Change user password", response = GenericResponse.class)
     @PostMapping("/password/change")
-    public GenericResponse changePassword(@RequestHeader(value = "loggedInUser") String user,
+    public void changePassword(@RequestHeader(value = "loggedInUser") String user,
                                           @Valid @RequestBody UserPasswordDTO passwordDTO){
         JSONObject  jsonObject = new JSONObject(user);
         User authenticatedUser = userService.findById(jsonObject.getLong("id"));
-         return userService.changePasswordByUser(authenticatedUser,passwordDTO);
+        userService.changePasswordByUser(authenticatedUser,passwordDTO);
     }
 
     @ApiOperation(value = "User password reset")
