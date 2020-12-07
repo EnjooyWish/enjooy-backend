@@ -2,6 +2,7 @@ package com.kibrit.authentication.controller;
 
 import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.dto.UserDTO;
+import com.kibrit.authentication.model.LightUser;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.service.UserService;
 import com.kibrit.authentication.util.GenericResponse;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 @RestController
 @RequestMapping("users")
@@ -28,6 +30,12 @@ public class UserController {
     public Page<User> findAll(@RequestParam @Min(0) int page, @RequestParam int size){
         return userService.findAll(page,size);
     }
+
+    @GetMapping("all")
+    public List<LightUser> findAllActiveUsers(){
+        return userService.findAllActiveUsers();
+    }
+
     @ApiOperation(value = "Create or update user")
     @PostMapping
     public User  save(@Valid @RequestBody UserDTO userDTO){
