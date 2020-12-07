@@ -107,7 +107,8 @@ public class UserService {
         if(id != null) {
             existingUser = findById(id);
         }
-        if((id == null && user != null) || (existingUser != null && user != null && user.getId() != existingUser.getId())){
+        if((id == null && user != null) ||
+                (existingUser != null && user != null && user.getId() != existingUser.getId())){
             throw new UsernameAlreadyExistsException("User with username " + username + " already exists");
         }
     }

@@ -21,7 +21,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
                 new LengthRule(6, 30),
 
                 // at least one upper-case character
-                new CharacterRule(EnglishCharacterData.UpperCase, 1),
+//                new CharacterRule(EnglishCharacterData.UpperCase, 1),
 
                 // at least one lower-case character
                 new CharacterRule(EnglishCharacterData.LowerCase, 1),
@@ -30,7 +30,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
                 new CharacterRule(EnglishCharacterData.Digit, 1),
 
                 // at least one special character
-                new CharacterRule(EnglishCharacterData.Special, 1),
+//                new CharacterRule(EnglishCharacterData.Special, 1),
 
                 // no whitespace
                 new WhitespaceRule()
