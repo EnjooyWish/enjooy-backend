@@ -6,6 +6,7 @@ import com.kibrit.authentication.dto.UserDTO;
 import com.kibrit.authentication.exception.InvalidOldPasswordException;
 import com.kibrit.authentication.exception.ResourceNotFoundException;
 import com.kibrit.authentication.exception.UsernameAlreadyExistsException;
+import com.kibrit.authentication.model.LightUser;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
 import com.kibrit.authentication.util.GenericResponse;
@@ -15,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -117,6 +121,14 @@ public class UserService {
 
     public Page<User> findAll(int page, int size){
         return userRepository.findAllByOrderByActiveDescIdAsc(PageRequest.of(page,size));
+    }
+
+    public List<LightUser>  findAllActiveUsers(){
+        List<User>  users = userRepository.findAllByActiveIsTrueOrderByFirstNameAscLastNameAsc();
+        return users
+                .stream()
+                .map(user -> new LightUser(user.getId(),user.getFullName()))
+                .collect(Collectors.toList());
     }
 
     public static void main(String[] args) {
