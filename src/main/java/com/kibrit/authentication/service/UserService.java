@@ -78,14 +78,13 @@ public class UserService {
         return BCrypt.checkpw(password,encryptedPassword);
     }
 
-    public GenericResponse changePasswordByUser(User user, UserPasswordDTO passwordDto){
+    public void changePasswordByUser(User user, UserPasswordDTO passwordDto){
         if (!isValidPassword(passwordDto.getOldPassword(),user.getPassword())) {
-            throw new InvalidOldPasswordException("Old password is not valid");
+            throw new InvalidOldPasswordException("Invalid old password");
         }else {
             user.setPassword(new BCryptPasswordEncoder().encode(passwordDto.getNewPassword()));
             userRepository.save(user);
         }
-        return new GenericResponse("success", "Password changed successfully");
     }
 
     public GenericResponse  changePasswordByAdmin(User user, AdminPasswordDTO adminPasswordDTO){

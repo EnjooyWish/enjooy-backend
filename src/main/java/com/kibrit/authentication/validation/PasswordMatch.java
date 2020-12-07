@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface PasswordMatch
 {
-    String message() default "The password fields must match";
+    String message() default "Password fields do not match!";
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
