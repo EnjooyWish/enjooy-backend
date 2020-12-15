@@ -9,7 +9,9 @@ import com.kibrit.authentication.exception.UsernameAlreadyExistsException;
 import com.kibrit.authentication.model.LightUser;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
+import com.kibrit.authentication.service.abstraction.ProviderService;
 import com.kibrit.authentication.util.GenericResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,9 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    ProviderService providerService;
+
     public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -37,8 +42,10 @@ public class UserService {
 
     public User save(UserDTO userDTO){
         User user;
+        boolean isUserUpdated = false;
         if(userDTO.getId() != null){
             user = findById(userDTO.getId());
+            isUserUpdated = !user.getFullName().equals(userDTO.getFullName());
         }else {
             user = new User();
             setDefaultPassword(user);
@@ -49,7 +56,11 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        if(isUserUpdated) {
+            providerService.sendUpdateInfo(savedUser);
+        }
+        return savedUser;
     }
 
     public void resetPassword(Long id){
