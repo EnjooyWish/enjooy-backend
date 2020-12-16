@@ -22,7 +22,7 @@ public class ProviderServiceImpl implements ProviderService {
     @Override
     public void sendUpdateInfo(User user)  {
         try {
-            LightUser lightUser = new LightUser(user.getId(),user.getFullName());
+            LightUser lightUser = new LightUser(user);
             String userJson = new ObjectMapper().writeValueAsString(lightUser);
             logger.info("userJson = " + userJson);
             rabbitTemplate.convertAndSend(RabbitMqConfiguration.queueName, userJson);

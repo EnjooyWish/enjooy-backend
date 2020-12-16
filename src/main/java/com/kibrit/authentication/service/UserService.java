@@ -139,12 +139,7 @@ public class UserService {
         List<User>  users = userRepository.findAllByActiveIsTrueOrderByFirstNameAscLastNameAsc();
         return users
                 .stream()
-                .map(user -> new LightUser(user.getId(),user.getFullName()))
+                .map(user -> new LightUser(user))
                 .collect(Collectors.toList());
-    }
-
-    public static void main(String[] args) {
-        String regex = "^((?![0-9.])[a-zA-Z0-9.]{5,30}+(?<![_.]))$";
-        System.out.println("qolf@".matches(regex));
     }
 }
