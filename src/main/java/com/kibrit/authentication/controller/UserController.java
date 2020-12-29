@@ -1,11 +1,11 @@
 package com.kibrit.authentication.controller;
 
+import com.kibrit.authentication.util.GenericResponse;
 import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.dto.UserDTO;
 import com.kibrit.authentication.model.LightUser;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.service.UserService;
-import com.kibrit.authentication.util.GenericResponse;
 import io.swagger.annotations.ApiOperation;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
