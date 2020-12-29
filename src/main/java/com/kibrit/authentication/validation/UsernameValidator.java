@@ -2,7 +2,6 @@ package com.kibrit.authentication.validation;
 
 import com.kibrit.authentication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

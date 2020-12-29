@@ -1,17 +1,15 @@
 package com.kibrit.authentication.service;
 
-import com.kibrit.authentication.dto.AdminPasswordDTO;
-import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.dto.UserDTO;
+import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.exception.InvalidOldPasswordException;
-import com.kibrit.authentication.exception.ResourceNotFoundException;
 import com.kibrit.authentication.exception.UsernameAlreadyExistsException;
-import com.kibrit.authentication.model.LightUser;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
-import com.kibrit.authentication.service.abstraction.ProviderService;
 import com.kibrit.authentication.util.GenericResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kibrit.authentication.dto.AdminPasswordDTO;
+import com.kibrit.authentication.exception.ResourceNotFoundException;
+import com.kibrit.authentication.model.LightUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,9 +30,6 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    ProviderService providerService;
-
     public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -42,10 +37,8 @@ public class UserService {
 
     public User save(UserDTO userDTO){
         User user;
-        boolean isUserUpdated = false;
         if(userDTO.getId() != null){
             user = findById(userDTO.getId());
-            isUserUpdated = !user.getFullName().equals(userDTO.getFullName());
         }else {
             user = new User();
             setDefaultPassword(user);
@@ -56,11 +49,7 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-        User savedUser = userRepository.save(user);
-        if(isUserUpdated) {
-            providerService.sendUpdateInfo(savedUser);
-        }
-        return savedUser;
+        return userRepository.save(user);
     }
 
     public void resetPassword(Long id){
@@ -102,7 +91,7 @@ public class UserService {
         }
     }
 
-    public GenericResponse  changePasswordByAdmin(User user, AdminPasswordDTO adminPasswordDTO){
+    public GenericResponse changePasswordByAdmin(User user, AdminPasswordDTO adminPasswordDTO){
         user.setPassword(new BCryptPasswordEncoder().encode(adminPasswordDTO.getNewPassword()));
         userRepository.save(user);
         return new GenericResponse("success", "Password changed successfully");
