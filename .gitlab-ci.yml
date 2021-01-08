@@ -64,13 +64,13 @@ ipeksu_deploy:
    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
    - mkdir -p ~/.ssh
    - chmod 700 ~/.ssh
-   - ssh-keyscan 10.8.0.1 >> ~/.ssh/known_hosts
+   - ssh-keyscan 192.168.1.55 >> ~/.ssh/known_hosts
    - chmod 644 ~/.ssh/known_hosts
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
    - ls -l target/
-   - ssh root@10.8.0.1 "systemctl stop authentication.service"
-   - scp -r target/*.jar root@10.8.0.1:/usr/orangeline/ && ssh root@10.8.0.1 "systemctl start authentication.service"
+   - ssh root@192.168.1.55 "systemctl stop authentication.service"
+   - scp -r target/*.jar root@192.168.1.55:/usr/orangeline/ && ssh root@192.168.1.55 "systemctl start authentication.service"
  only:
    - master
  when: manual
