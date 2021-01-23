@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfiguration {
 
-    @Bean
-    Queue voipUserUpdateQueue() {
-        return new Queue("voip.user.update", true);
-    }
+//    @Bean
+//    Queue voipUserUpdateQueue() {
+//        return new Queue("voip.user.update", true);
+//    }
 
-    @Bean
-    Queue voipUserDeleteQueue() {
-        return new Queue("voip.user.delete", true);
-    }
+//    @Bean
+//    Queue voipUserDeleteQueue() {
+//        return new Queue("voip.user.delete", true);
+//    }
 
     @Bean
     Queue omniQueue() {
@@ -46,21 +46,27 @@ public class RabbitMqConfiguration {
     TopicExchange topicExchange() {
         return new TopicExchange("topic-exchange");
     }
-    
-    @Bean
-    Binding voipUpdateBinding(Queue voipUserUpdateQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(voipUserUpdateQueue).to(exchange).with("#.update");
-    }
 
-    @Bean
-    Binding voipDeleteBinding(Queue voipUserDeleteQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(voipUserDeleteQueue).to(exchange).with("#.delete");
-    }
+//    @Bean
+//    Binding voipUpdateBinding(Queue voipUserUpdateQueue, TopicExchange exchange) {
+//        return BindingBuilder.bind(voipUserUpdateQueue).to(exchange).with("#.update");
+//    }
+//
+//    @Bean
+//    Binding voipDeleteBinding(Queue voipUserDeleteQueue, TopicExchange exchange) {
+//        return BindingBuilder.bind(voipUserDeleteQueue).to(exchange).with("#.delete");
+//    }
 
     @Bean
     Binding omniBinding(Queue omniQueue, TopicExchange exchange) {
         return BindingBuilder.bind(omniQueue).to(exchange).with("#.update");
     }
+
+
+//    @Bean
+//    Binding taskBinding(Queue taskQueue, TopicExchange exchange) {
+//        return BindingBuilder.bind(taskQueue).to(exchange).with("#.update");
+//    }
 
     @Bean
     Binding faqBinding(Queue faqQueue, TopicExchange exchange) {
@@ -68,10 +74,10 @@ public class RabbitMqConfiguration {
     }
 
 
-    @Bean
-    Binding crmBinding(Queue crmQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(crmQueue).to(exchange).with("#.update");
-    }
+//    @Bean
+//    Binding crmBinding(Queue crmQueue, TopicExchange exchange) {
+//        return BindingBuilder.bind(crmQueue).to(exchange).with("#.update");
+//    }
 
     @Bean
     public MessageConverter jsonMessageConverter() {
