@@ -16,10 +16,10 @@ public class RabbitMqConfiguration {
 #        return new Queue("voip.user.update", true);
 #    }
 
-    @Bean
-    Queue voipUserDeleteQueue() {
-        return new Queue("voip.user.delete", true);
-    }
+#    @Bean
+#    Queue voipUserDeleteQueue() {
+#        return new Queue("voip.user.delete", true);
+#    }
 
     @Bean
     Queue omniQueue() {
@@ -47,15 +47,15 @@ public class RabbitMqConfiguration {
         return new TopicExchange("topic-exchange");
     }
     
-    @Bean
-    Binding voipUpdateBinding(Queue voipUserUpdateQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(voipUserUpdateQueue).to(exchange).with("#.update");
-    }
+ #   @Bean
+ #   Binding voipUpdateBinding(Queue voipUserUpdateQueue, TopicExchange exchange) {
+ #       return BindingBuilder.bind(voipUserUpdateQueue).to(exchange).with("#.update");
+ #   }
 
-    @Bean
-    Binding voipDeleteBinding(Queue voipUserDeleteQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(voipUserDeleteQueue).to(exchange).with("#.delete");
-    }
+ #   @Bean
+ #   Binding voipDeleteBinding(Queue voipUserDeleteQueue, TopicExchange exchange) {
+ #       return BindingBuilder.bind(voipUserDeleteQueue).to(exchange).with("#.delete");
+ #   }
 
     @Bean
     Binding omniBinding(Queue omniQueue, TopicExchange exchange) {
