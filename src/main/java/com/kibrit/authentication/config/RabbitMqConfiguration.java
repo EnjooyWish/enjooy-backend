@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfiguration {
 
-    @Bean
-    Queue voipUserUpdateQueue() {
-        return new Queue("voip.user.update", true);
-    }
+#    @Bean
+#    Queue voipUserUpdateQueue() {
+#        return new Queue("voip.user.update", true);
+#    }
 
     @Bean
     Queue voipUserDeleteQueue() {
