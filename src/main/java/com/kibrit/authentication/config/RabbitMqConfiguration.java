@@ -35,12 +35,12 @@ public class RabbitMqConfiguration {
 
     @Bean
     Queue crmQueue() {
-        return new Queue("crm.user.update", false);
+        return new Queue("crm.user.update", true);
     }
 
     @Bean
     Queue taskQueue() {
-        return new Queue("task.user.update", false);
+        return new Queue("task.user.update", true);
     }
 
 
