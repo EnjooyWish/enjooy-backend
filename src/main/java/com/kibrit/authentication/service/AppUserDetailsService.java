@@ -1,5 +1,7 @@
 package com.kibrit.authentication.service;
 
+import com.kibrit.authentication.model.Permission;
+import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,10 +30,22 @@ public class AppUserDetailsService implements UserDetailsService {
             List<GrantedAuthority> authorities = new ArrayList<>();
             user.getRoles().forEach(role ->
                     authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user));
         }else {
             throw new UsernameNotFoundException(String.format("The username %s doesn't exist", username));
         }
 
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(User user) {
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        for (final Role role : user.getRoles()) {
+            GrantedAuthority authority = new SimpleGrantedAuthority(role.getRoleName());
+            authorities.add(authority);
+            for (Permission permission : role.getPermissions()){
+                authorities.add(new SimpleGrantedAuthority(permission.getName()));
+            }
+        }
+        return authorities;
     }
 }

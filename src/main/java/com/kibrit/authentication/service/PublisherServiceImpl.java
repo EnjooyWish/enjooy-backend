@@ -17,9 +17,6 @@ public class PublisherServiceImpl implements PublisherService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-//    @Autowired
-//    private TopicExchange topicExchange;
-
     @Autowired
     private TopicExchange topicExchange;
 
