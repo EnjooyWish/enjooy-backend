@@ -3,6 +3,7 @@ package com.kibrit.authentication.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -15,6 +16,12 @@ public class Permission implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Module module;
+
     private String name;
+
+
 
 }
