@@ -131,4 +131,8 @@ public class UserService {
                 .map(user -> new LightUser(user))
                 .collect(Collectors.toList());
     }
+
+    public List<User>  findAllUsers(){
+        return userRepository.findAllByActiveIsTrueOrderByFirstNameAscLastNameAsc();
+    }
 }

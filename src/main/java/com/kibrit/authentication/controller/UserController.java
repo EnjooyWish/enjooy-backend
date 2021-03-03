@@ -32,8 +32,13 @@ public class UserController {
     }
 
     @GetMapping("all")
-    public List<LightUser> findAllActiveUsers(){
+    public List<LightUser> findAllActiveLightUsers(){
         return userService.findAllActiveUsers();
+    }
+
+    @GetMapping("extended-list")
+    public List<User> findAllActiveUsers(){
+        return userService.findAllUsers();
     }
 
     @ApiOperation(value = "Create or update user")
