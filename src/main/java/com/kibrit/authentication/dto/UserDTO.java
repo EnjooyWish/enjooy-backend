@@ -11,6 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class UserDTO  implements Serializable {
@@ -32,6 +34,8 @@ public class UserDTO  implements Serializable {
 
     @ValidEmail
     private String email;
+
+    private List<Long> roleIds = new ArrayList<>();
 
     @Transient
     @Getter(AccessLevel.NONE)
