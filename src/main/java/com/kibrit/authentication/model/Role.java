@@ -1,6 +1,8 @@
 package com.kibrit.authentication.model;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,22 +22,30 @@ public class Role implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String roleName;
-
-    private String description;
+    private String name;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User createdBy;
 
     @CreationTimestamp
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
 
+    @JsonIgnore
     @UpdateTimestamp
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastModificationDate;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+    @JsonIgnore
+    @JoinColumn(name = "last_modified_by", referencedColumnName = "id")
+    @ManyToOne
+    private User lastModifiedBy;
+
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(name = "users_and_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "roles_and_permissions", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))

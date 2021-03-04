@@ -1,15 +1,13 @@
 package com.kibrit.authentication.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -49,10 +47,10 @@ public class User implements Serializable {
     @ApiModelProperty(notes = "User Profile Picture", example = "Base64")
     private String photo;
 
-    @JsonIgnore
-    @JoinTable(name = "users_and_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Role> roles;
+    @ToString.Exclude
+    @JsonBackReference
+    @ManyToMany(mappedBy = "users")
+    private List<Role> roles = new ArrayList<>();
 
     @Basic(optional = false)
     @Column(name = "is_active")

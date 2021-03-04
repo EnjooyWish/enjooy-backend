@@ -4,6 +4,7 @@ import com.kibrit.authentication.dto.UserDTO;
 import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.exception.InvalidOldPasswordException;
 import com.kibrit.authentication.exception.UsernameAlreadyExistsException;
+import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
 import com.kibrit.authentication.util.GenericResponse;
@@ -51,6 +52,12 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         return userRepository.save(user);
     }
+
+//        public User save(UserDTO userDTO){
+//
+//        return userRepository.save(userDTO);
+//    }
+
 
     public void resetPassword(Long id){
         User user = findById(id);

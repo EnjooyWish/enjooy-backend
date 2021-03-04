@@ -40,7 +40,7 @@ public class AppUserDetailsService implements UserDetailsService {
     private List<GrantedAuthority> getGrantedAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for (final Role role : user.getRoles()) {
-            GrantedAuthority authority = new SimpleGrantedAuthority(role.getRoleName());
+            GrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
             authorities.add(authority);
             for (Permission permission : role.getPermissions()){
                 authorities.add(new SimpleGrantedAuthority(permission.getName()));
