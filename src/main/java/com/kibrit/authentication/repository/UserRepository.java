@@ -16,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAllByOrderByActiveDescIdAsc(Pageable pageable);
 
     List<User> findAllByActiveIsTrueOrderByFirstNameAscLastNameAsc();
+
 }

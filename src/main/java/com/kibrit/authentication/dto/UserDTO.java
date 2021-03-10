@@ -1,5 +1,6 @@
 package com.kibrit.authentication.dto;
 
+import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.validation.ValidEmail;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -35,7 +36,7 @@ public class UserDTO  implements Serializable {
     @ValidEmail
     private String email;
 
-    private List<Long> roleIds = new ArrayList<>();
+//    private List<RoleDTO> roles = new ArrayList<>();
 
     @Transient
     @Getter(AccessLevel.NONE)
