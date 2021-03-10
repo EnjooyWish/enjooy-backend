@@ -1,6 +1,7 @@
 package com.kibrit.authentication.controller;
 
 
+import com.kibrit.authentication.dto.RoleDTO;
 import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.service.abstraction.RoleService;
@@ -37,5 +38,10 @@ public class RoleController {
     @PostMapping("/user/assignment")
     public Role assignUserToRole(@RequestParam Long id, @RequestBody List<User> users){
         return roleService.assignUserToRole(id,users);
+    }
+
+    @GetMapping
+    public  List<RoleDTO>  findLightRole(){
+        return roleService.findAll();
     }
 }

@@ -14,7 +14,6 @@ public class GenericResponse {
 
     public GenericResponse() {
     }
-
     public GenericResponse(String message, List errors) {
         super();
         this.message = message;

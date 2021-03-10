@@ -1,5 +1,6 @@
 package com.kibrit.authentication.service;
 
+import com.kibrit.authentication.dto.RoleDTO;
 import com.kibrit.authentication.exception.ResourceNotFoundException;
 import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -40,5 +42,14 @@ public class RoleServiceImpl implements RoleService {
         role.getUsers().clear();
         role.getUsers().addAll(users);
         return roleRepository.save(role);
+    }
+
+    @Override
+    public List<RoleDTO> findAll() {
+        List<Role> roles = roleRepository.findAll();
+       return roles
+                .stream()
+                .map(role -> new RoleDTO(role.getId(),role.getName()))
+                .collect(Collectors.toList());
     }
 }

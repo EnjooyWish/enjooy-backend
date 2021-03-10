@@ -47,10 +47,19 @@ public class User implements Serializable {
     @ApiModelProperty(notes = "User Profile Picture", example = "Base64")
     private String photo;
 
-    @ToString.Exclude
-    @JsonBackReference
-    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    @ManyToMany(mappedBy="users")
     private List<Role> roles = new ArrayList<>();
+
+
+//    @JsonIgnore
+//    @ToString.Exclude
+//    @ManyToMany
+//    @JoinTable(
+//            name="users_and_roles",
+//            joinColumns=@JoinColumn(name="user_id", referencedColumnName="id"),
+//            inverseJoinColumns=@JoinColumn(name="role_id", referencedColumnName="id"))
+//    private List<Role> roles = new ArrayList<>();
 
     @Basic(optional = false)
     @Column(name = "is_active")
@@ -67,5 +76,15 @@ public class User implements Serializable {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+        role.getUsers().remove(this);
     }
 }
