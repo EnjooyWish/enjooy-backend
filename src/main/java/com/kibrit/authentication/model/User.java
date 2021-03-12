@@ -48,7 +48,7 @@ public class User implements Serializable {
     private String photo;
 
     @JsonIgnore
-    @ManyToMany(mappedBy="users")
+    @ManyToMany(mappedBy="users", fetch = FetchType.EAGER )
     private List<Role> roles = new ArrayList<>();
 
 

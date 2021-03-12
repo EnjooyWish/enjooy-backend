@@ -5,5 +5,6 @@ public enum Module {
     FAQ,
     TASK_MANAGEMENT,
     REPORT,
-    CONFIGURATION
+    CONFIGURATION,
+    REQUESTS
 }

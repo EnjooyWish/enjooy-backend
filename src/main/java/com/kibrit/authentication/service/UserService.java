@@ -7,6 +7,7 @@ import com.kibrit.authentication.exception.InvalidOldPasswordException;
 import com.kibrit.authentication.exception.UsernameAlreadyExistsException;
 import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
+import com.kibrit.authentication.repository.RoleRepository;
 import com.kibrit.authentication.repository.UserRepository;
 import com.kibrit.authentication.service.abstraction.RoleService;
 import com.kibrit.authentication.util.GenericResponse;
@@ -22,7 +23,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +35,9 @@ public class UserService {
     private String defaultPassword;
 
     final UserRepository userRepository;
+
+    @Autowired
+     RoleRepository roleRepository;
 
     @Autowired
     RoleService roleService;
@@ -44,30 +50,32 @@ public class UserService {
     }
 
     public User save(UserDTO userDTO){
-        List<Role>  removeRoles  = new ArrayList<>();
+        List<Role>  newRoles = new ArrayList<>();
+        List<Role> roles = new ArrayList<>();
         User user;
         if(userDTO.getId() != null){
             user = findById(userDTO.getId());
-//            for (Role role : user.getRoles()) {
-//                removeRoles.add(role);
-////                user.removeRole(role);
-//            }
-//            user.getRoles().removeAll(removeRoles);
         }else {
             user = new User();
             setDefaultPassword(user);
         }
         checkUserExistence(userDTO.getUsername(),userDTO.getId());
-//        user.getRoles().clear();
         user.setUsername(userDTO.getUsername());
         user.setPhoto(userDTO.getPhoto());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-//        for (RoleDTO roleDTO : userDTO.getRoles()){
-//            Role role = roleService.findById(roleDTO.getId());
-//            user.addRole(role);
-//        }
+        for ( Role role : new ArrayList<>(user.getRoles())) {
+              role.removeUser(user);
+              roles.add(role);
+        }
+        roleRepository.saveAll(roles);
+        for (RoleDTO roleDTO : userDTO.getRoles()){
+            Role role = roleService.findById(roleDTO.getId());
+            newRoles.add(role);
+        }
+        newRoles.forEach(newRole -> newRole.addUser(user));
+        user.setRoles(newRoles);
         return userRepository.save(user);
     }
 

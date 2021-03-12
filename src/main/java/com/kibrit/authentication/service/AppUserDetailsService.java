@@ -30,7 +30,7 @@ public class AppUserDetailsService implements UserDetailsService {
             List<GrantedAuthority> authorities = new ArrayList<>();
 //            user.getRoles().forEach(role ->
 //                    authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),getGrantedAuthorities(user));
         }else {
             throw new UsernameNotFoundException(String.format("The username %s doesn't exist", username));
         }
@@ -40,7 +40,7 @@ public class AppUserDetailsService implements UserDetailsService {
     private List<GrantedAuthority> getGrantedAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for (final Role role : user.getRoles()) {
-            GrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
+            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName());
             authorities.add(authority);
             for (Permission permission : role.getPermissions()){
                 authorities.add(new SimpleGrantedAuthority(permission.getName()));
