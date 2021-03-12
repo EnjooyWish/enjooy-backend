@@ -4,6 +4,7 @@ public enum Module {
     CRM,
     FAQ,
     TASK_MANAGEMENT,
-    REPORT,
-    CONFIGURATION
+    REPORTS,
+    CONFIGURATION,
+    REQUESTS
 }
