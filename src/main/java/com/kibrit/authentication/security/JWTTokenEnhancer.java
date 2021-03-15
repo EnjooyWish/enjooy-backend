@@ -1,20 +1,33 @@
 package com.kibrit.authentication.security;
 
 
+import com.kibrit.authentication.model.Permission;
+import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.UserRepository;
+import com.kibrit.authentication.service.AppUserDetailsService;
+import com.sun.jersey.core.impl.provider.entity.XMLRootObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JWTTokenEnhancer implements TokenEnhancer {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AppUserDetailsService userDetailsService;
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -25,7 +38,20 @@ public class JWTTokenEnhancer implements TokenEnhancer {
         additionalInfo.put("lastName",user.getLastName());
         additionalInfo.put("fullName",user.getFirstName() + " " + user.getLastName());
         additionalInfo.put("username", user.getUsername());
+        additionalInfo.put("authorities",getPermissionList(user));
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
+    }
+
+    public List<String> getPermissionList(User user) {
+        List<String>  permissionList = new ArrayList<>();
+        for (final Role role : user.getRoles()) {
+           permissionList.add("ROLE_" + role.getName());
+            for (Permission permission : role.getPermissions()){
+                if(!permissionList.contains(permission.getName()))
+                permissionList.add(permission.getName());
+            }
+        }
+        return permissionList;
     }
 }

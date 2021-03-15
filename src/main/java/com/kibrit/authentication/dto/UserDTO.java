@@ -36,7 +36,7 @@ public class UserDTO  implements Serializable {
     @ValidEmail
     private String email;
 
-//    private List<RoleDTO> roles = new ArrayList<>();
+    private List<RoleDTO> roles = new ArrayList<>();
 
     @Transient
     @Getter(AccessLevel.NONE)

@@ -2,21 +2,19 @@ package com.kibrit.authentication.model;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "roles")
 @Data
+@NoArgsConstructor
 public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -45,16 +43,23 @@ public class Role implements Serializable {
 //    @ManyToOne
 //    private User lastModifiedBy;
 
-//    @ToString.Exclude
-//    @ManyToMany(mappedBy="roles",cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-//    private List<User> users = new ArrayList<>();
-
     @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "users_and_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "roles_and_permissions", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private List<Permission> permissions = new ArrayList<>();
+    @OrderBy("id")
+    private Set<Permission> permissions = new LinkedHashSet<>();
+
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getRoles().add(this);
+    }
+
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getRoles().remove(this);
+    }
 }

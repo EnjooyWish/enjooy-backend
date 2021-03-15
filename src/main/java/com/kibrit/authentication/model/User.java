@@ -7,14 +7,14 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @ApiModel("AcceptedMessage")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -44,22 +44,27 @@ public class User implements Serializable {
     private String email;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @ApiModelProperty(notes = "User Profile Picture", example = "Base64")
     private String photo;
 
     @JsonIgnore
-    @ManyToMany(mappedBy="users")
-    private List<Role> roles = new ArrayList<>();
+    @ManyToMany(mappedBy="users",fetch = FetchType.EAGER)
+    @OrderBy("id")
+    private Set<Role> roles =new LinkedHashSet();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
 
-//    @JsonIgnore
-//    @ToString.Exclude
-//    @ManyToMany
-//    @JoinTable(
-//            name="users_and_roles",
-//            joinColumns=@JoinColumn(name="user_id", referencedColumnName="id"),
-//            inverseJoinColumns=@JoinColumn(name="role_id", referencedColumnName="id"))
-//    private List<Role> roles = new ArrayList<>();
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Basic(optional = false)
     @Column(name = "is_active")
