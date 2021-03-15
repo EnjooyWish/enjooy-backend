@@ -27,9 +27,6 @@ public class AppUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if(user != null && user.isActive()) {
-            List<GrantedAuthority> authorities = new ArrayList<>();
-//            user.getRoles().forEach(role ->
-//                    authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),getGrantedAuthorities(user));
         }else {
             throw new UsernameNotFoundException(String.format("The username %s doesn't exist", username));
@@ -37,8 +34,8 @@ public class AppUserDetailsService implements UserDetailsService {
 
     }
 
-    private List<GrantedAuthority> getGrantedAuthorities(User user) {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    public List<GrantedAuthority> getGrantedAuthorities(User user) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
         for (final Role role : user.getRoles()) {
             GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName());
             authorities.add(authority);

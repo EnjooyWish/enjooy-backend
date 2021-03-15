@@ -5,6 +5,7 @@ import com.kibrit.authentication.dto.UserDTO;
 import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.exception.InvalidOldPasswordException;
 import com.kibrit.authentication.exception.UsernameAlreadyExistsException;
+import com.kibrit.authentication.model.Permission;
 import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.RoleRepository;
@@ -18,14 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,8 +50,8 @@ public class UserService {
     }
 
     public User save(UserDTO userDTO){
-        List<Role>  newRoles = new ArrayList<>();
-        List<Role> roles = new ArrayList<>();
+        Set<Role> newRoles = new LinkedHashSet();
+        Set<Role> roles = new LinkedHashSet();
         User user;
         if(userDTO.getId() != null){
             user = findById(userDTO.getId());
