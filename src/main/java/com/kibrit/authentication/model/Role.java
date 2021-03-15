@@ -1,9 +1,7 @@
 package com.kibrit.authentication.model;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,7 +11,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "roles")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -42,6 +41,20 @@ public class Role implements Serializable {
 //    @JoinColumn(name = "last_modified_by", referencedColumnName = "id")
 //    @ManyToOne
 //    private User lastModifiedBy;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return Objects.equals(id, role.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @ToString.Exclude
     @ManyToMany
