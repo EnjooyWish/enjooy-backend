@@ -6,6 +6,7 @@ import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.RoleRepository;
 import com.kibrit.authentication.service.abstraction.RoleService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +21,17 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    UserService userService;
+
     @Override
-    public Role save(Role role) {
+    public Role save(String user, Role role) {
+        JSONObject jsonObject = new JSONObject(user);
+        User authenticatedUser = userService.findById(jsonObject.getLong("id"));
+        if(role.getId() == null){
+            role.setCreatedBy(authenticatedUser);
+        }
+        role.setLastModifiedBy(authenticatedUser);
         return roleRepository.save(role);
     }
 

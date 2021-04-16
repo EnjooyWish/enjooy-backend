@@ -20,8 +20,8 @@ public class RoleController {
     RoleService roleService;
 
     @PostMapping
-    public Role save(@RequestBody Role role){
-        return roleService.save(role);
+    public Role save(@RequestHeader(value = "loggedInUser") String user,@RequestBody Role role){
+        return roleService.save(user,role);
     }
 
     @GetMapping("/{id}")

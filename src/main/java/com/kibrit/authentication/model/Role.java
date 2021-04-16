@@ -3,6 +3,8 @@ package com.kibrit.authentication.model;
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -24,23 +26,25 @@ public class Role implements Serializable {
     @NotBlank(message = "Role name is required")
     private String name;
 
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    @JoinColumn(name = "created_by", referencedColumnName = "id",updatable = false)
     @ManyToOne
     private User createdBy;
 
+
     @CreationTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @Column(updatable = false)
     private LocalDateTime creationDate;
-//
-//    @JsonIgnore
-//    @UpdateTimestamp
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-//    private LocalDateTime lastModificationDate;
 
-//    @JsonIgnore
-//    @JoinColumn(name = "last_modified_by", referencedColumnName = "id")
-//    @ManyToOne
-//    private User lastModifiedBy;
+    @JsonIgnore
+    @UpdateTimestamp
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastModificationDate;
+
+    @JsonIgnore
+    @JoinColumn(name = "last_modified_by", referencedColumnName = "id")
+    @ManyToOne
+    private User lastModifiedBy;
 
 
     @Override
