@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface RoleService {
-    Role save(Role role);
+    Role save(String user,Role role);
     Role findById(Long id);
     Page<Role> findAllByPageSizeAndNumber(int page, int size);
     Role assignUserToRole(Long id, List<User> users);
