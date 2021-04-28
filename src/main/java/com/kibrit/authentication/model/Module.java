@@ -6,5 +6,6 @@ public enum Module {
     TASK_MANAGEMENT,
     REPORTS,
     CONFIGURATION,
-    REQUESTS
+    REQUESTS,
+    MONITORING
 }
