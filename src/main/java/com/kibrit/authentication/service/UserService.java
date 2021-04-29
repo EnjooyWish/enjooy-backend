@@ -50,8 +50,8 @@ public class UserService {
     }
 
     public User save(UserDTO userDTO){
-//        Set<Role> newRoles = new LinkedHashSet();
-//        Set<Role> roles = new LinkedHashSet();
+        Set<Role> newRoles = new LinkedHashSet();
+        Set<Role> roles = new LinkedHashSet();
         User user;
         if(userDTO.getId() != null){
             user = findById(userDTO.getId());
@@ -65,17 +65,17 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-//        for ( Role role : new ArrayList<>(user.getRoles())) {
-//              role.removeUser(user);
-//              roles.add(role);
-//        }
-//        roleRepository.saveAll(roles);
-//        for (RoleDTO roleDTO : userDTO.getRoles()){
-//            Role role = roleService.findById(roleDTO.getId());
-//            newRoles.add(role);
-//        }
-//        newRoles.forEach(newRole -> newRole.addUser(user));
-//        user.setRoles(newRoles);
+        for ( Role role : new ArrayList<>(user.getRoles())) {
+              role.removeUser(user);
+              roles.add(role);
+        }
+        roleRepository.saveAll(roles);
+        for (RoleDTO roleDTO : userDTO.getRoles()){
+            Role role = roleService.findById(roleDTO.getId());
+            newRoles.add(role);
+        }
+        newRoles.forEach(newRole -> newRole.addUser(user));
+        user.setRoles(newRoles);
         return userRepository.save(user);
     }
 
