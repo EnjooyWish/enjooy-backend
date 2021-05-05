@@ -38,6 +38,8 @@ public class UserDTO  implements Serializable {
 
     private List<RoleDTO> roles = new ArrayList<>();
 
+    private boolean active = true;
+
     @Transient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)

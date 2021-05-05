@@ -111,6 +111,7 @@ public class UserService {
         userDTO.setLastName(user.getLastName());
         userDTO.setPhoto(user.getPhoto());
         userDTO.setEmail(user.getEmail());
+        userDTO.setActive(user.isActive());
         for (Role role : user.getRoles()){
             RoleDTO roleDTO = new RoleDTO();
             roleDTO.setId(role.getId());
