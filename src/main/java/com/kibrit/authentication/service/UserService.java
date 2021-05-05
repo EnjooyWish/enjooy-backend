@@ -11,16 +11,12 @@ import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.RoleRepository;
 import com.kibrit.authentication.repository.UserRepository;
 import com.kibrit.authentication.service.abstraction.RoleService;
-import com.kibrit.authentication.util.GenericResponse;
-import com.kibrit.authentication.dto.AdminPasswordDTO;
 import com.kibrit.authentication.exception.ResourceNotFoundException;
 import com.kibrit.authentication.model.LightUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -101,6 +97,30 @@ public class UserService {
                 new ResourceNotFoundException("User not found with id = " + id));
     }
 
+    public UserDTO findByIdAndMapToDTO(Long id){
+        User user = findById(id);
+        return mapUserToDTO(user);
+    }
+
+    public UserDTO mapUserToDTO(User user){
+        List<RoleDTO> roles = new ArrayList<>();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setPhoto(user.getPhoto());
+        userDTO.setEmail(user.getEmail());
+        for (Role role : user.getRoles()){
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.setId(role.getId());
+            roleDTO.setName(role.getName());
+            roles.add(roleDTO);
+        }
+        userDTO.setRoles(roles);
+        return userDTO;
+    }
+
     public User  findByUsername(String username){
         return userRepository.findByUsername(username);
     }
@@ -116,12 +136,6 @@ public class UserService {
             user.setPassword(new BCryptPasswordEncoder().encode(passwordDto.getNewPassword()));
             userRepository.save(user);
         }
-    }
-
-    public GenericResponse changePasswordByAdmin(User user, AdminPasswordDTO adminPasswordDTO){
-        user.setPassword(new BCryptPasswordEncoder().encode(adminPasswordDTO.getNewPassword()));
-        userRepository.save(user);
-        return new GenericResponse("success", "Password changed successfully");
     }
 
     public void deleteUser(Long id){
@@ -147,8 +161,14 @@ public class UserService {
         return user != null;
     }
 
-    public Page<User> findAll(int page, int size){
-        return userRepository.findAllByOrderByActiveDescIdAsc(PageRequest.of(page,size));
+    public Page<UserDTO> findAll(int page, int size){
+        Page<User> userPage = userRepository.findAllByOrderByActiveDescIdAsc(PageRequest.of(page,size));
+        return toPageObjectDto(userPage);
+    }
+
+    public Page<UserDTO> toPageObjectDto(Page<User> users) {
+        Page<UserDTO> userDTOS  = users.map(this::mapUserToDTO);
+        return userDTOS;
     }
 
     public List<LightUser>  findAllActiveUsers(){

@@ -27,7 +27,7 @@ public class UserController {
 
     @GetMapping
     @Validated
-    public Page<User> findAll(@RequestParam @Min(0) int page, @RequestParam int size){
+    public Page<UserDTO> findAll(@RequestParam @Min(0) int page, @RequestParam int size){
         return userService.findAll(page,size);
     }
 
@@ -75,8 +75,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable Long id){
-        return userService.findById(id);
+    public UserDTO findById(@PathVariable Long id){
+        return userService.findByIdAndMapToDTO(id);
     }
 
 }
