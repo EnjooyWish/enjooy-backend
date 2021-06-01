@@ -95,7 +95,7 @@ ady_deploy:
    - master
  when: manual
 
-ATB_deploy:
+atb_deploy:
  stage: deploy
  before_script:
    - microdnf install which
