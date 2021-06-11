@@ -8,6 +8,8 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.management.Query;
+
 @Configuration
 public class RabbitMqConfiguration {
 
@@ -43,6 +45,11 @@ public class RabbitMqConfiguration {
         return new Queue("task.user.update", true);
     }
 
+    @Bean
+    Queue reportQueue() {
+        return new Queue("report.user.update", true);
+    }
+
 
     @Bean
     TopicExchange topicExchange() {
@@ -59,8 +66,6 @@ public class RabbitMqConfiguration {
     Binding voipDeleteBinding(Queue voipUserDeleteQueue, TopicExchange exchange) {
         return BindingBuilder.bind(voipUserDeleteQueue).to(exchange).with("#.delete");
     }
-
-
 
     @Bean
     Binding omniBinding(Queue omniQueue, TopicExchange exchange) {
@@ -82,6 +87,11 @@ public class RabbitMqConfiguration {
     @Bean
     Binding crmBinding(Queue crmQueue, TopicExchange exchange) {
         return BindingBuilder.bind(crmQueue).to(exchange).with("#.update");
+    }
+
+    @Bean
+    Binding reportBinding(Queue reportQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(reportQueue).to(exchange).with("#.update");
     }
 
     @Bean

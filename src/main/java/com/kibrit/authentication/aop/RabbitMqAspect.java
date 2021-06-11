@@ -43,11 +43,8 @@ public class RabbitMqAspect {
             || !oldUser.getEmail().equals(userDTO.getEmail());
         }
         User user = (User) pjp.proceed();
-        if(isUserUpdated) {
+        if(isUserUpdated || userDTO.getId() == null) {
             publisherService.publishUserEvent(user,"user.update");
-        }
-        if(userDTO.getId() == null){
-            publisherService.publishUserEvent(user, "user.update");
         }
         return user;
     }
