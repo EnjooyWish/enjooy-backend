@@ -39,8 +39,7 @@ public class RabbitMqAspect {
         UserDTO userDTO = (UserDTO)  pjp.getArgs()[0];
         if(userDTO.getId() != null) {
             oldUser = userService.findById(userDTO.getId());
-            isUserUpdated = !oldUser.getFullName().equals(userDTO.getFullName())
-            || !oldUser.getEmail().equals(userDTO.getEmail());
+            isUserUpdated = !oldUser.getFullName().equals(userDTO.getFullName());
         }
         User user = (User) pjp.proceed();
         if(isUserUpdated || userDTO.getId() == null) {
