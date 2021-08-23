@@ -109,8 +109,8 @@ atb_deploy:
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
    - ls -l target/
-   - ssh kibrit@10.0.18.13 "sudo systemctl stop authentication.service"
-   - scp -r target/*.jar kibrit@10.0.18.13:/usr/orangeline/ && ssh kibrit@10.0.18.13 "sudo systemctl start authentication.service"	
+   - ssh root@10.0.18.13 "systemctl stop authentication.service"
+   - scp -r target/*.jar root@10.0.18.13:/usr/orangeline/ && ssh root@10.0.18.13 "systemctl start authentication.service"	
  only:
    - master
  when: manual
