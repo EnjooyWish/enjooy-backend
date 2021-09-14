@@ -114,3 +114,23 @@ atb_deploy:
  only:
    - master
  when: manual
+
+moe_deploy:
+ stage: deploy
+ before_script:
+   - microdnf install which
+   - 'which ssh-agent || ( microdnf install openssh-clients )'
+   - eval $(ssh-agent -s)
+   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+   - mkdir -p ~/.ssh
+   - chmod 700 ~/.ssh
+   - ssh-keyscan 192.168.110.152 >> ~/.ssh/known_hosts
+   - chmod 644 ~/.ssh/known_hosts
+   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+ script:
+   - ls -l target/
+   - ssh support@172.31.64.49 "sudo systemctl stop authentication.service"
+   - scp -r target/*.jar emin@192.168.110.152:/usr/orangeline/ && ssh emin@192.168.110.152 "sudo systemctl start authentication.service"	
+ only:
+   - master
+ when: manual
