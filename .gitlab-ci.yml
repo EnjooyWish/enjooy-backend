@@ -129,7 +129,7 @@ moe_deploy:
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
    - ls -l target/
-   - ssh support@172.31.64.49 "sudo systemctl stop authentication.service"
+   - ssh emin@192.168.110.152 "sudo systemctl stop authentication.service"
    - scp -r target/*.jar emin@192.168.110.152:/usr/orangeline/ && ssh emin@192.168.110.152 "sudo systemctl start authentication.service"	
  only:
    - master
