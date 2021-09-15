@@ -128,6 +128,8 @@ moe_deploy:
    - chmod 644 ~/.ssh/known_hosts
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
+   - microdnf install oracle-epel-release-el8
+   - microdnf install sshpass -y
    - ls -l target/
    - sshpass -p EEee0816624 ssh emin@192.168.110.152 "sudo systemctl stop authentication.service"
    - sshpass -p EEee0816624 scp -r target/*.jar emin@192.168.110.152:/usr/orangeline/ && sshpass -p EEee0816624 ssh emin@192.168.110.152 "sudo systemctl start authentication.service"	
