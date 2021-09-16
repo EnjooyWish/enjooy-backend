@@ -115,7 +115,7 @@ atb_deploy:
    - master
  when: manual
 
-moe_deploy:
+edu_deploy:
  stage: deploy
  before_script:
    - microdnf install which
