@@ -32,7 +32,7 @@ local_deploy:
    - ssh root@192.168.170.2 "systemctl stop authentication.service"
    - scp -r target/*.jar root@192.168.170.2:/usr/orangeline/ && ssh root@192.168.170.2 "systemctl start authentication.service"	
  only:
-   - master
+   - staging
 # when: manual
 
 ibar_deploy:
