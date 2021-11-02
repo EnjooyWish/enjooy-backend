@@ -60,6 +60,7 @@ public class UserService {
         user.setPhoto(userDTO.getPhoto());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setUserNo(userDTO.getUserNo());
 
