@@ -53,15 +53,14 @@ public class UserService {
             user = findById(userDTO.getId());
         }else {
             user = new User();
-            //setDefaultPassword(user);
+            setDefaultPassword(user);
         }
         checkUserExistence(userDTO.getUsername(),userDTO.getId());
         user.setUsername(userDTO.getUsername());
         user.setPhoto(userDTO.getPhoto());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-
+        user.setEmail(userDTO.getEmail());
         for ( Role role : new ArrayList<>(user.getRoles())) {
               role.removeUser(user);
               roles.add(role);
@@ -113,7 +112,6 @@ public class UserService {
         userDTO.setPhoto(user.getPhoto());
         userDTO.setEmail(user.getEmail());
         userDTO.setActive(user.isActive());
-        userDTO.setPassword(user.getPassword());
         for (Role role : user.getRoles()){
             RoleDTO roleDTO = new RoleDTO();
             roleDTO.setId(role.getId());
