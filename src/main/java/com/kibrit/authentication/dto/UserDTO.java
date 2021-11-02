@@ -21,6 +21,9 @@ public class UserDTO  implements Serializable {
 
     private Long id;
 
+    @NotBlank(message = "User Number is mandatory")
+    private String userNo;
+
     private String photo;
 
     @Pattern(regexp = "^((?![0-9.])[a-zA-Z0-9.]{5,30}+(?<![_.]))$",message = "Username must be at least 5 characters long." +

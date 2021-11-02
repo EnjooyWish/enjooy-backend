@@ -24,6 +24,9 @@ public class User implements Serializable {
     @ApiModelProperty(notes = "Auto generated user id", example = "1")
     private Long id;
 
+    @ApiModelProperty(notes = "User No", example = "user123", required = true)
+    private String userNo;
+
     @ApiModelProperty(notes = "Username must be unique", example = "samirs", required = true)
     private String username;
 
