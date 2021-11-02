@@ -53,7 +53,7 @@ public class UserService {
             user = findById(userDTO.getId());
         }else {
             user = new User();
-            setDefaultPassword(user);
+            //setDefaultPassword(user);
         }
         checkUserExistence(userDTO.getUsername(),userDTO.getId());
         user.setUsername(userDTO.getUsername());
