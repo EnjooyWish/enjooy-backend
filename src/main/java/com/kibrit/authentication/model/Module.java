@@ -7,5 +7,6 @@ public enum Module {
     REPORTS,
     CONFIGURATION,
     REQUESTS,
-    MONITORING
+    MONITORING,
+    SMS
 }
