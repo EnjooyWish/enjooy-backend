@@ -32,7 +32,7 @@ local_deploy:
    - ssh root@192.168.170.2 "systemctl stop authentication.service"
    - scp -r target/*.jar root@192.168.170.2:/usr/orangeline/ && ssh root@192.168.170.2 "systemctl start authentication.service"	
  only:
-   - master
+   - staging
 # when: manual
 
 ibar_deploy:
@@ -109,8 +109,30 @@ atb_deploy:
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
    - ls -l target/
-   - ssh kibrit@10.0.18.13 "sudo systemctl stop authentication.service"
-   - scp -r target/*.jar kibrit@10.0.18.13:/usr/orangeline/ && ssh kibrit@10.0.18.13 "sudo systemctl start authentication.service"	
+   - ssh root@10.0.18.13 "systemctl stop authentication.service"
+   - scp -r target/*.jar root@10.0.18.13:/usr/orangeline/ && ssh root@10.0.18.13 "systemctl start authentication.service"	
+ only:
+   - master
+ when: manual
+
+edu_deploy:
+ stage: deploy
+ before_script:
+   - microdnf install which
+   - 'which ssh-agent || ( microdnf install openssh-clients )'
+   - eval $(ssh-agent -s)
+   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+   - mkdir -p ~/.ssh
+   - chmod 700 ~/.ssh
+   - ssh-keyscan 192.168.110.152 >> ~/.ssh/known_hosts
+   - chmod 644 ~/.ssh/known_hosts
+   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+ script:
+   - microdnf install oracle-epel-release-el8
+   - microdnf install sshpass -y
+   - ls -l target/
+   - sshpass -p EEee0816624 ssh emin@192.168.110.152 "sudo systemctl stop authentication.service"
+   - sshpass -p EEee0816624 scp -r target/*.jar emin@192.168.110.152:/usr/orangeline/ && sshpass -p EEee0816624 ssh emin@192.168.110.152 "sudo systemctl start authentication.service"	
  only:
    - master
  when: manual
