@@ -1,6 +1,7 @@
 package com.kibrit.authentication.dto;
 
 import com.kibrit.authentication.validation.ValidEmail;
+import com.kibrit.authentication.validation.ValidPassword;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -15,10 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+//@PasswordMatch(password = "password", confirmationPassword = "confirmationPassword")
 public class UserDTO  implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+
+    private String userNo;
 
     private String photo;
 
@@ -34,6 +38,11 @@ public class UserDTO  implements Serializable {
 
     @ValidEmail
     private String email;
+
+//    @ValidPassword
+//    private String password;
+
+//    private String confirmationPassword;
 
     private List<RoleDTO> roles = new ArrayList<>();
 

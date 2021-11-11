@@ -40,20 +40,19 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    Queue smsQueue() {
-        return new Queue("sms.user.update", true);
+    Queue taskQueue() {
+        return new Queue("task.user.update", true);
     }
 
     @Bean
-    Queue taskQueue() {
-        return new Queue("task.user.update", true);
+    Queue smsQueue() {
+        return new Queue("sms.user.update", true);
     }
 
     @Bean
     Queue reportQueue() {
         return new Queue("report.user.update", true);
     }
-
 
     @Bean
     TopicExchange topicExchange() {
