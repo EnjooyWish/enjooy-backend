@@ -1,7 +1,5 @@
 package com.kibrit.authentication.dto;
 
-import com.kibrit.authentication.model.Role;
-import com.kibrit.authentication.validation.PasswordMatch;
 import com.kibrit.authentication.validation.ValidEmail;
 import com.kibrit.authentication.validation.ValidPassword;
 import lombok.AccessLevel;

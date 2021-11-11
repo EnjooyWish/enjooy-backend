@@ -24,7 +24,6 @@ public class RabbitMqConfiguration {
         return new Queue("voip.user.delete", true);
     }
 
-
     @Bean
     Queue omniQueue() {
         return new Queue("omni.user.update", true);
@@ -38,6 +37,11 @@ public class RabbitMqConfiguration {
     @Bean
     Queue crmQueue() {
         return new Queue("crm.user.update", true);
+    }
+
+    @Bean
+    Queue smsQueue() {
+        return new Queue("sms.user.update", true);
     }
 
     @Bean
