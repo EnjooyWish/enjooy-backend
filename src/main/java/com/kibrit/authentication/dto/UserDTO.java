@@ -42,7 +42,7 @@ public class UserDTO  implements Serializable {
     @ValidEmail
     private String email;
 
-    @ValidPassword
+    //@ValidPassword
     private String password;
 
     private String confirmationPassword;
