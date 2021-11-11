@@ -18,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@PasswordMatch(password = "password", confirmationPassword = "confirmationPassword")
+//@PasswordMatch(password = "password", confirmationPassword = "confirmationPassword")
 public class UserDTO  implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    @NotBlank(message = "User Number is mandatory")
     private String userNo;
 
     private String photo;
@@ -42,10 +41,10 @@ public class UserDTO  implements Serializable {
     @ValidEmail
     private String email;
 
-    //@ValidPassword
-    private String password;
+//    @ValidPassword
+//    private String password;
 
-    private String confirmationPassword;
+//    private String confirmationPassword;
 
     private List<RoleDTO> roles = new ArrayList<>();
 
