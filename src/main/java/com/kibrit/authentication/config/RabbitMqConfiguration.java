@@ -46,10 +46,14 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
+    Queue smsQueue() {
+        return new Queue("sms.user.update", true);
+    }
+
+    @Bean
     Queue reportQueue() {
         return new Queue("report.user.update", true);
     }
-
 
     @Bean
     TopicExchange topicExchange() {
@@ -92,6 +96,11 @@ public class RabbitMqConfiguration {
     @Bean
     Binding reportBinding(Queue reportQueue, TopicExchange exchange) {
         return BindingBuilder.bind(reportQueue).to(exchange).with("#.update");
+    }
+
+    @Bean
+    Binding smsBinding(Queue smsQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(smsQueue).to(exchange).with("#.update");
     }
 
     @Bean
