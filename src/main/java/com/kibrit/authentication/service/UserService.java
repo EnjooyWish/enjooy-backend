@@ -60,7 +60,7 @@ public class UserService {
             user = findById(userDTO.getId());
         }else {
             user = new User();
-            setDefaultPassword(user);
+            //setDefaultPassword(user);
         }
         checkUserExistence(userDTO.getUsername(),userDTO.getId());
         user.setUsername(userDTO.getUsername());
@@ -68,8 +68,8 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-//        if(userDTO.getPassword()!=null)
-//            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        if(userDTO.getPassword()!=null)
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setUserNo(userDTO.getUserNo());
 
         for ( Role role : new ArrayList<>(user.getRoles())) {
