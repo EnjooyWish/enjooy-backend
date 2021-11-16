@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-//@PasswordMatch(password = "password", confirmationPassword = "confirmationPassword")
 public class UserDTO  implements Serializable {
     private static final long serialVersionUID = 1L;
 
