@@ -152,7 +152,7 @@ Veysaloglu1_deploy:
  script:
    - ls -l target/
    - ssh developer@10.10.5.25 "sudo systemctl stop authentication.service"
-   - scp -r target/*.jar developer@10.10.5.24:/home/developer/ && ssh developer@10.10.5.24 "sudo mv /home/developer/authentication.jar /usr/orangeline" && ssh developer@10.10.5.24 "sudo systemctl start crm.service"
+   - scp -r target/*.jar developer@10.10.5.24:/home/developer/ && ssh developer@10.10.5.24 "sudo mv /home/developer/authentication.jar /usr/orangeline" && ssh developer@10.10.5.24 "sudo systemctl start authentication.service"
  only:
    - master
  when: manual
