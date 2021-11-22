@@ -24,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -156,6 +157,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void deleteUser(Long id){
         entityManager.createNativeQuery("DELETE from users_and_roles u where u.user_id= :userId")
                 .setParameter("userId", id)
