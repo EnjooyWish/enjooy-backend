@@ -109,8 +109,9 @@ atb_deploy:
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
    - ls -l target/
-   - ssh root@10.0.18.13 "systemctl stop authentication.service"
-   - scp -r target/*.jar root@10.0.18.13:/usr/orangeline/ && ssh root@10.0.18.13 "systemctl start authentication.service"	
+   - ssh -tt kibrit@10.0.18.13 -o StrictHostKeyChecking=no "sudo systemctl stop authentication.service"
+   - scp -o StrictHostKeyChecking=no -r target/*.jar kibrit@10.0.18.13:/home/kibrit/
+   - ssh -tt kibrit@10.0.18.13 -o StrictHostKeyChecking=no "ls -l /home/kibrit/ && sudo mv /home/kibrit/authentication.jar /usr/orangeline/ && sudo chmod 777 /usr/orangeline/authentication.jar && sudo systemctl start authentication.service && ls -l /home/kibrit/" 
  only:
    - master
  when: manual
