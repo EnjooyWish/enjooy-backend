@@ -23,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,9 @@ public class UserService {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    EntityManager entityManager;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -153,6 +157,9 @@ public class UserService {
     }
 
     public void deleteUser(Long id){
+        entityManager.createNativeQuery("DELETE from users_and_roles u where u.user_id= :userId")
+                .setParameter("userId", id)
+                .executeUpdate();
         userRepository.deleteById(id);
     }
 
