@@ -31,8 +31,7 @@ local_deploy:
  script:
    - ssh root@192.168.170.2 "systemctl stop authentication.service"
    - scp -r target/*.jar root@192.168.170.2:/usr/orangeline/ && ssh root@192.168.170.2 "systemctl start authentication.service"	
-   - ssh root@192.168.170.2 "systemctl stop gateway.service"
-   - scp -r target/*.jar root@192.168.170.2:/usr/orangeline/ && ssh root@192.168.170.2 "systemctl start gateway.service"	
+   - ssh root@192.168.170.2 "systemctl restart gateway.service"
  only:
    - staging
 # when: manual
@@ -53,6 +52,8 @@ ibar_deploy:
    - ls -l target/
    - ssh support@172.31.64.49 "sudo systemctl stop authentication.service"
    - scp -r target/*.jar support@172.31.64.49:/usr/orangeline/ && ssh support@172.31.64.49 "sudo systemctl start authentication.service"	
+   - ssh support@172.31.64.49 "sudo systemctl restart gateway.service"
+
  only:
    - master
  when: manual
@@ -73,6 +74,7 @@ ipeksu_deploy:
    - ls -l target/
    - ssh root@192.168.1.55 "systemctl stop authentication.service"
    - scp -r target/*.jar root@192.168.1.55:/usr/orangeline/ && ssh root@192.168.1.55 "systemctl start authentication.service"
+   - ssh root@192.168.1.55 "systemctl restart gateway.service"
  only:
    - master
  when: manual
@@ -93,6 +95,7 @@ ady_deploy:
    - ls -l target/
    - ssh appadmin@192.168.6.33 -p 2233 "sudo systemctl stop authentication.service"
    - scp -P 2233 -r target/*.jar appadmin@192.168.6.33:/usr/orangeline/ && ssh appadmin@192.168.6.33 -p 2233 "sudo systemctl start authentication.service"	
+   - ssh appadmin@192.168.6.33 -p 2233 "sudo systemctl restart gateway.service"
  only:
    - master
  when: manual
@@ -113,6 +116,7 @@ atb_deploy:
    - ls -l target/
    - ssh root@10.0.18.13 "systemctl stop authentication.service"
    - scp -r target/*.jar root@10.0.18.13:/usr/orangeline/ && ssh root@10.0.18.13 "systemctl start authentication.service"	
+   - ssh root@10.0.18.13 "systemctl restart gateway.service"
  only:
    - master
  when: manual
@@ -135,6 +139,7 @@ edu_deploy:
    - ls -l target/
    - sshpass -p EEee0816624 ssh emin@192.168.110.152 "sudo systemctl stop authentication.service"
    - sshpass -p EEee0816624 scp -r target/*.jar emin@192.168.110.152:/usr/orangeline/ && sshpass -p EEee0816624 ssh emin@192.168.110.152 "sudo systemctl start authentication.service"	
+   - sshpass -p EEee0816624 ssh emin@192.168.110.152 "sudo systemctl restart gateway.service"
  only:
    - master
  when: manual
