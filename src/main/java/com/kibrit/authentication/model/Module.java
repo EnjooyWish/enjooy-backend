@@ -8,5 +8,6 @@ public enum Module {
     CONFIGURATION,
     REQUESTS,
     MONITORING,
-    SMS
+    SMS,
+    EVALUATION
 }
