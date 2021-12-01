@@ -13,6 +13,8 @@ import com.kibrit.authentication.repository.UserRepository;
 import com.kibrit.authentication.service.abstraction.RoleService;
 import com.kibrit.authentication.exception.ResourceNotFoundException;
 import com.kibrit.authentication.model.LightUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,11 +36,16 @@ public class UserService {
 
     final UserRepository userRepository;
 
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
      RoleRepository roleRepository;
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    EntityManager entityManager;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -46,6 +55,9 @@ public class UserService {
     }
 
     public User save(UserDTO userDTO){
+
+        logger.info("saving user"+userDTO);
+
         Set<Role> newRoles = new LinkedHashSet();
         Set<Role> roles = new LinkedHashSet();
         User user;
@@ -53,7 +65,7 @@ public class UserService {
             user = findById(userDTO.getId());
         }else {
             user = new User();
-            setDefaultPassword(user);
+            //setDefaultPassword(user);
         }
         checkUserExistence(userDTO.getUsername(),userDTO.getId());
         user.setUsername(userDTO.getUsername());
@@ -61,8 +73,8 @@ public class UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-//        if(userDTO.getPassword()!=null)
-//            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        if(userDTO.getPassword()!=null)
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setUserNo(userDTO.getUserNo());
 
         for ( Role role : new ArrayList<>(user.getRoles())) {
@@ -145,7 +157,11 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void deleteUser(Long id){
+        entityManager.createNativeQuery("DELETE from users_and_roles u where u.user_id= :userId")
+                .setParameter("userId", id)
+                .executeUpdate();
         userRepository.deleteById(id);
     }
 

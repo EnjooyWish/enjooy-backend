@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-//@PasswordMatch(password = "password", confirmationPassword = "confirmationPassword")
 public class UserDTO  implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -39,10 +38,9 @@ public class UserDTO  implements Serializable {
     @ValidEmail
     private String email;
 
-//    @ValidPassword
-//    private String password;
+    private String password;
 
-//    private String confirmationPassword;
+    private String confirmationPassword;
 
     private List<RoleDTO> roles = new ArrayList<>();
 
