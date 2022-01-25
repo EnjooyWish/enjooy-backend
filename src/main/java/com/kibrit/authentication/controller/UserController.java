@@ -1,5 +1,6 @@
 package com.kibrit.authentication.controller;
 
+import com.kibrit.authentication.service.abstraction.PasswordService;
 import com.kibrit.authentication.util.GenericResponse;
 import com.kibrit.authentication.dto.UserPasswordDTO;
 import com.kibrit.authentication.dto.UserDTO;
@@ -7,6 +8,7 @@ import com.kibrit.authentication.model.LightUser;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -17,13 +19,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("users")
+@RequiredArgsConstructor
 public class UserController {
 
-    final UserService userService;
+    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final PasswordService passwordService;
 
     @GetMapping
     @Validated
@@ -53,13 +54,13 @@ public class UserController {
                                           @Valid @RequestBody UserPasswordDTO passwordDTO){
         JSONObject  jsonObject = new JSONObject(user);
         User authenticatedUser = userService.findById(jsonObject.getLong("id"));
-        userService.changePasswordByUser(authenticatedUser,passwordDTO);
+        passwordService.changePasswordByUser(authenticatedUser,passwordDTO);
     }
 
     @ApiOperation(value = "User password reset")
     @PostMapping("/{id}/password/reset")
     public void resetPassword(@PathVariable Long id){
-         userService.resetPassword(id);
+         passwordService.resetPassword(id);
     }
 
     @ApiOperation(value = "Activate or deactivate user", response = User.class)

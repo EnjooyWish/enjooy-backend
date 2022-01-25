@@ -6,6 +6,7 @@ import com.kibrit.authentication.model.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Set;
 
 public interface RoleService {
     Role save(String user,Role role);
@@ -13,4 +14,5 @@ public interface RoleService {
     Page<Role> findAllByPageSizeAndNumber(int page, int size);
     Role assignUserToRole(Long id, List<User> users);
     List<RoleDTO>  findAll();
+    List<Role> saveAll(Set<Role> roles);
 }

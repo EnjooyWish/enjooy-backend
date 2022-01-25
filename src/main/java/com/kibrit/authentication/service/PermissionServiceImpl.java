@@ -3,7 +3,7 @@ package com.kibrit.authentication.service;
 import com.kibrit.authentication.model.Permission;
 import com.kibrit.authentication.repository.PermissionRepository;
 import com.kibrit.authentication.service.abstraction.PermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class PermissionServiceImpl implements PermissionService {
 
-    @Autowired
-    PermissionRepository permissionRepository;
+    private final PermissionRepository permissionRepository;
 
     @Override
     public Map<String, List<Permission>> findAll() {

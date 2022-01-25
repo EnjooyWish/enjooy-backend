@@ -31,6 +31,7 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Value("${security.jwt.client-secret}")
     private String clientSecret;
 
+
     @Autowired
     private  AuthenticationManager authenticationManager;
 

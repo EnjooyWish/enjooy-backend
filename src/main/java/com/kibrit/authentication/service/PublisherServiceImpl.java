@@ -3,6 +3,7 @@ package com.kibrit.authentication.service;
 import com.kibrit.authentication.model.LightUser;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.service.abstraction.PublisherService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.TopicExchange;
@@ -11,14 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
-    @Autowired
-    private TopicExchange topicExchange;
+    private final TopicExchange topicExchange;
 
     @Override
     public void publishUserEvent(User user,String routingKey)  {

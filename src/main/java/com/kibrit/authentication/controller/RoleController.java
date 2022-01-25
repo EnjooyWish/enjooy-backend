@@ -5,7 +5,7 @@ import com.kibrit.authentication.dto.RoleDTO;
 import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.service.abstraction.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,33 +15,34 @@ import java.util.List;
 
 @RestController
 @RequestMapping("roles")
+@RequiredArgsConstructor
 public class RoleController {
-    @Autowired
-    RoleService roleService;
+
+    private final RoleService roleService;
 
     @PostMapping
-    public Role save(@RequestHeader(value = "loggedInUser") String user,@RequestBody Role role){
-        return roleService.save(user,role);
+    public Role save(@RequestHeader(value = "loggedInUser") String user, @RequestBody Role role) {
+        return roleService.save(user, role);
     }
 
     @GetMapping("/{id}")
-    public Role findById(@PathVariable Long id){
+    public Role findById(@PathVariable Long id) {
         return roleService.findById(id);
     }
 
     @GetMapping("/table")
     @Validated
-    public Page<Role> findAll(@RequestParam @Min(0) int page, @RequestParam int size){
-        return roleService.findAllByPageSizeAndNumber(page,size);
+    public Page<Role> findAll(@RequestParam @Min(0) int page, @RequestParam int size) {
+        return roleService.findAllByPageSizeAndNumber(page, size);
     }
 
     @PostMapping("/user/assignment")
-    public Role assignUserToRole(@RequestParam Long id, @RequestBody List<User> users){
-        return roleService.assignUserToRole(id,users);
+    public Role assignUserToRole(@RequestParam Long id, @RequestBody List<User> users) {
+        return roleService.assignUserToRole(id, users);
     }
 
     @GetMapping
-    public  List<RoleDTO>  findLightRole(){
+    public List<RoleDTO> findLightRole() {
         return roleService.findAll();
     }
 }

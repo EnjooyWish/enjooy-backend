@@ -6,6 +6,7 @@ import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.RoleRepository;
 import com.kibrit.authentication.service.abstraction.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,16 +14,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+//@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    RoleRepository roleRepository;
+   private  RoleRepository roleRepository;
 
-    @Autowired
-    UserService userService;
+   @Autowired
+   private  UserService userService;
 
     @Override
     public Role save(String user, Role role) {
@@ -61,5 +64,10 @@ public class RoleServiceImpl implements RoleService {
                 .stream()
                 .map(role -> new RoleDTO(role.getId(),role.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Role> saveAll(Set<Role> roles) {
+        return roleRepository.saveAll(roles);
     }
 }
