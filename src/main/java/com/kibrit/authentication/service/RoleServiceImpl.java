@@ -2,6 +2,7 @@ package com.kibrit.authentication.service;
 
 import com.kibrit.authentication.dto.RoleDTO;
 import com.kibrit.authentication.exception.ResourceNotFoundException;
+import com.kibrit.authentication.exception.RoleHasUsers;
 import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.RoleRepository;
@@ -69,5 +70,15 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> saveAll(Set<Role> roles) {
         return roleRepository.saveAll(roles);
+    }
+
+    @Override
+    public void deleteRoleById(Long id) {
+         Role role = findById(id);
+         if(role.getUsers().size() == 0) {
+             roleRepository.deleteById(id);
+         }else {
+             throw new RoleHasUsers("This role has bounded users. Please, detach users from the role");
+         }
     }
 }

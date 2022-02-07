@@ -45,4 +45,9 @@ public class RoleController {
     public List<RoleDTO> findLightRole() {
         return roleService.findAll();
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteRoleById(@PathVariable Long id) {
+        roleService.deleteRoleById(id);
+    }
 }
