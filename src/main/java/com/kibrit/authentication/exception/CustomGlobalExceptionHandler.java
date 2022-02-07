@@ -63,6 +63,14 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({RoleHasUsers.class})
+    public ResponseEntity<Object> handleRoleHasUsersException(
+            final RuntimeException ex, final WebRequest request) {
+        logger.error("Role has bounded users", ex);
+        final GenericResponse bodyOfResponse = new GenericResponse("Role Has Bounded Users", ex.getMessage());
+        return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.EXPECTATION_FAILED);
+    }
+
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleInternal(
             final RuntimeException ex, final WebRequest request) {

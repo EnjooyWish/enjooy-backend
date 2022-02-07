@@ -15,4 +15,5 @@ public interface RoleService {
     Role assignUserToRole(Long id, List<User> users);
     List<RoleDTO>  findAll();
     List<Role> saveAll(Set<Role> roles);
+    void deleteRoleById(Long id);
 }

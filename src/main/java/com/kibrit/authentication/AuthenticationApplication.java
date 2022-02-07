@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-//@EnableRabbit
-//@EnableJpaAuditing
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableJpaRepositories
