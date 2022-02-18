@@ -1,11 +1,9 @@
 package com.kibrit.authentication.dto;
 
 import com.kibrit.authentication.validation.ValidEmail;
-import com.kibrit.authentication.validation.ValidPassword;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
@@ -48,15 +46,11 @@ public class UserDTO  implements Serializable {
 
     @Transient
     @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     private String fullName;
 
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 
 }

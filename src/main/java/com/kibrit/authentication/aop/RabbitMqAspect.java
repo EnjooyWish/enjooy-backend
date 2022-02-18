@@ -4,31 +4,27 @@ import com.kibrit.authentication.dto.UserDTO;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.service.UserService;
 import com.kibrit.authentication.service.abstraction.PublisherService;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Aspect
 @Service
+@RequiredArgsConstructor
 public class RabbitMqAspect {
-    private Logger logger =  LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    PublisherService publisherService;
+    final PublisherService publisherService;
 
-    @Autowired
-    UserService userService;
+    final UserService userService;
 
     @Pointcut(value= "execution(* com.kibrit.authentication.service.UserService.save(..))")
-    public void saveMethod() {};
+    public void saveMethod() {}
 
     @Pointcut(value= "execution(* com.kibrit.authentication.service.UserService.deleteUser(..))")
-    public void deleteMethod() {};
+    public void deleteMethod() {}
 
 
 
@@ -55,5 +51,5 @@ public class RabbitMqAspect {
         User oldUser = userService.findById(userId);
         pjp.proceed();
         publisherService.publishUserEvent(oldUser,"user.delete");
-    };
+    }
 }

@@ -2,10 +2,12 @@ package com.kibrit.authentication.service;
 
 import com.kibrit.authentication.dto.RoleDTO;
 import com.kibrit.authentication.exception.ResourceNotFoundException;
+import com.kibrit.authentication.exception.RoleHasUsers;
 import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import com.kibrit.authentication.repository.RoleRepository;
 import com.kibrit.authentication.service.abstraction.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,16 +15,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+//@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    RoleRepository roleRepository;
+   private  RoleRepository roleRepository;
 
-    @Autowired
-    UserService userService;
+   @Autowired
+   private  UserService userService;
 
     @Override
     public Role save(String user, Role role) {
@@ -61,5 +65,20 @@ public class RoleServiceImpl implements RoleService {
                 .stream()
                 .map(role -> new RoleDTO(role.getId(),role.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Role> saveAll(Set<Role> roles) {
+        return roleRepository.saveAll(roles);
+    }
+
+    @Override
+    public void deleteRoleById(Long id) {
+         Role role = findById(id);
+         if(role.getUsers().size() == 0) {
+             roleRepository.deleteById(id);
+         }else {
+             throw new RoleHasUsers("This role has bounded users. Please, detach users from the role");
+         }
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -75,24 +76,10 @@ public class User implements Serializable {
 
     @Transient
     @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     private String fullName;
 
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void addRole(Role role) {
-        this.roles.add(role);
-        role.getUsers().add(this);
-    }
-
-    public void removeRole(Role role) {
-        this.roles.remove(role);
-        role.getUsers().remove(this);
-    }
 }

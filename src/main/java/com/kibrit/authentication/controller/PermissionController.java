@@ -3,7 +3,7 @@ package com.kibrit.authentication.controller;
 
 import com.kibrit.authentication.model.Permission;
 import com.kibrit.authentication.service.abstraction.PermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,10 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("permissions")
+@RequiredArgsConstructor
 public class PermissionController {
 
-    @Autowired
-    PermissionService permissionService;
+    final PermissionService permissionService;
 
     @GetMapping
     public Map<String, List<Permission>> findAll() {

@@ -9,5 +9,6 @@ public enum Module {
     REQUESTS,
     MONITORING,
     SMS,
-    EVALUATION
+    EVALUATION,
+    SMM
 }
