@@ -47,10 +47,7 @@ public class User implements Serializable {
     @ApiModelProperty(notes = "User Email Address", example = "emil.aliyev@kibrit.tech")
     private String email;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @ApiModelProperty(notes = "User Profile Picture", example = "Base64")
-    private String photo;
+    private String photoUrl;
 
     @JsonIgnore
     @ManyToMany(mappedBy="users",fetch = FetchType.EAGER)

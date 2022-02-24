@@ -51,7 +51,7 @@ public class UserService {
         }
         checkUserExistence(userDTO.getUsername(), userDTO.getId());
         user.setUsername(userDTO.getUsername());
-        user.setPhoto(userDTO.getPhoto());
+        user.setPhotoUrl(userDTO.getPhoto());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
