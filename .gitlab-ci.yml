@@ -203,3 +203,24 @@ Veysaloglu3_deploy:
  only:
    - master
  when: manual
+
+v195_deploy:
+ stage: deploy
+ before_script:
+   - microdnf install which
+   - 'which ssh-agent || ( microdnf install openssh-clients )'
+   - eval $(ssh-agent -s)
+   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+   - mkdir -p ~/.ssh
+   - chmod 700 ~/.ssh
+   - ssh-keyscan 10.7.83.1 >> ~/.ssh/known_hosts
+   - chmod 644 ~/.ssh/known_hosts
+   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+ script:
+   - ls -l target/
+   - ssh taxes@10.7.83.1 "sudo systemctl stop authentication.service"
+   - scp -r target/*.jar taxes@10.7.83.1:/usr/orangeline/ && ssh taxes@10.7.83.1 "sudo systemctl start authentication.service"	
+ only:
+   - master
+ when: manual
+
