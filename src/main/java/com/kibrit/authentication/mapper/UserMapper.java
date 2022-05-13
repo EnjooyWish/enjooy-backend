@@ -1,6 +1,8 @@
 package com.kibrit.authentication.mapper;
 
+import com.kibrit.authentication.dto.RoleDTO;
 import com.kibrit.authentication.dto.UserDTO;
+import com.kibrit.authentication.model.Role;
 import com.kibrit.authentication.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +15,13 @@ public interface UserMapper {
 
     User fromDTO(UserDTO userDTO);
 
+    Role fromDto(RoleDTO roleDTO);
 
-    @Mapping(target="photo", source="user.photoUrl")
+    RoleDTO fromEntity(Role role);
+
+    @Mapping(target="photo", source="photoUrl")
     UserDTO fromEntity(User user);
+
+
+
 }
