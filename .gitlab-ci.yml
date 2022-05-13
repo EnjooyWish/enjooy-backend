@@ -101,7 +101,7 @@ ady_deploy:
  only:
    - master
  when: manual
-tags:
+ tags:
    - gitlab-runner
 
 atb_deploy:
