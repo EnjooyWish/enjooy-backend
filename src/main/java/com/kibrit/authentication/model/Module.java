@@ -10,5 +10,6 @@ public enum Module {
     MONITORING,
     SMS,
     EVALUATION,
-    SMM
+    SMM,
+    CALLBACK
 }
