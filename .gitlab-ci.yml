@@ -125,6 +125,9 @@ atb_deploy:
  only:
    - master
  when: manual
+ tags:
+   - gitlab-runner
+
 
 edu_deploy:
  stage: deploy
