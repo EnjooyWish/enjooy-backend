@@ -92,7 +92,13 @@ public class UserService {
     }
 
     public UserDTO mapUserToUserDTO(User user) {
-         return UserMapper.MAPPER.fromEntity(user);
+        UserDTO userDTO = UserMapper.MAPPER.fromEntity(user);
+        userDTO.getRoles().clear();
+        user.getRoles().stream().filter(x->x.getId()!=null).forEach(x-> userDTO.getRoles().add(RoleDTO.builder()
+                .id(x.getId())
+                .name(x.getName())
+                .build()));
+        return userDTO;
     }
 
     public User findByUsername(String username) {
