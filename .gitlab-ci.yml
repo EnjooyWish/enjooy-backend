@@ -18,8 +18,31 @@ build:
  script:
    - mvn $MAVEN_OPTS clean install
    - mv target/*.jar target/authentication.jar
+ artifacts:
+   paths:
+   - target/
  tags:
    - gitlab-runner
+
+ita_deploy:
+ stage: deploy
+ before_script:
+   - 'which ssh-agent || ( microdnf install openssh-clients )'
+   - eval $(ssh-agent -s)
+   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+   - mkdir -p ~/.ssh
+   - chmod 700 ~/.ssh
+   - ssh-keyscan -p 6661 192.168.40.10 >> ~/.ssh/known_hosts
+   - chmod 644 ~/.ssh/known_hosts
+   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+ script:
+   - ssh  kibrit@192.168.40.10 -p 6661 "sudo systemctl stop break.service"
+   - scp -P 6661 -r target/*.jar kibrit@192.168.40.10:/usr/orangeline/ && ssh kibrit@192.168.40.10 -p 6661 "sudo systemctl start break.service"	
+ only:
+   - master
+ tags:
+   - deploy-runner
+
 
 
 local_deploy:
