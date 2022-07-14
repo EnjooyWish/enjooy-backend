@@ -36,8 +36,8 @@ ita_deploy:
    - chmod 644 ~/.ssh/known_hosts
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
  script:
-   - ssh  kibrit@192.168.40.10 -p 6661 "sudo systemctl stop break.service"
-   - scp -P 6661 -r target/*.jar kibrit@192.168.40.10:/usr/orangeline/ && ssh kibrit@192.168.40.10 -p 6661 "sudo systemctl start break.service"	
+   - ssh  kibrit@192.168.40.10 -p 6661 "sudo systemctl stop authentication.service"
+   - scp -P 6661 -r target/*.jar kibrit@192.168.40.10:/usr/orangeline/ && ssh kibrit@192.168.40.10 -p 6661 "sudo systemctl start authentication.service"	
  only:
    - master
  tags:
