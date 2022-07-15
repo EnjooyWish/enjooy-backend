@@ -24,7 +24,7 @@ build:
  tags:
    - gitlab-runner
 
-ita_deploy:
+its_deploy:
  stage: deploy
  before_script:
    - 'which ssh-agent || ( microdnf install openssh-clients )'
@@ -42,7 +42,7 @@ ita_deploy:
    - master
  tags:
    - deploy-runner
-
+ when: manual
 
 
 local_deploy:
